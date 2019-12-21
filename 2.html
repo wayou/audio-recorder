@@ -75,8 +75,8 @@
 
         stopRecordingButton.addEventListener("click", function () {
                             window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                context = new AudioContext();
-            var sampleRate = context.sampleRate;
+
+            var sampleRate = new AudioContext().sampleRate;
 
 
             // stop recording
