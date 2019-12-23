@@ -17,7 +17,7 @@
 
     <script>
       var start = 0;
-      var SAMPLE_RATE = new AudioContext().sampleRate;
+      var SAMPLE_RATE = 44100;
       String.prototype.toHHMMSS = function() {
         var sec_num = parseInt(this, 10); // don't forget the second param
         var hours = Math.floor(sec_num / 3600);
@@ -49,8 +49,6 @@
       var recordingLength = 0;
       var volume = null;
       var mediaStream = null;
-      //        var sampleRate = 88200;
-      var sampleRate = new AudioContext().sampleRate;
       var context = null;
       var blob = null;
 
@@ -63,7 +61,7 @@
           {
             // audio: true
             audio: {
-              sampleRate: SAMPLE_RATE,
+              sampleRate: 44100,
               channelCount: 2 // canary 中此设置未生效，始终为 2
             }
           },
@@ -73,7 +71,7 @@
             // creates the audio context
             window.AudioContext =
               window.AudioContext || window.webkitAudioContext;
-            context = new AudioContext();
+            context = new AudioContext({sampleRate: 44100});
 
             // creates an audio node from the microphone incoming stream
             mediaStream = context.createMediaStreamSource(e);
@@ -121,8 +119,6 @@
           info.textContent = String((new Date().getTime()-start)/1000).toHHMMSS();
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-        var sampleRate = new AudioContext().sampleRate;
-
         // stop recording
         recorder.disconnect(context.destination);
         mediaStream.disconnect(recorder);
@@ -148,8 +144,8 @@
         view.setUint32(16, 16, true); // chunkSize
         view.setUint16(20, 1, true); // wFormatTag
         view.setUint16(22, 2, true); // wChannels: stereo (2 channels)
-        view.setUint32(24, sampleRate, true); // dwSamplesPerSec
-        view.setUint32(28, sampleRate * 4, true); // dwAvgBytesPerSec
+        view.setUint32(24, 44100, true); // dwSamplesPerSec
+        view.setUint32(28, 44100 * 4, true); // dwAvgBytesPerSec
         view.setUint16(32, 4, true); // wBlockAlign
         view.setUint16(34, 16, true); // wBitsPerSample
         // data sub-chunk
